@@ -15,10 +15,10 @@ intents = json.loads(open('/content/drive/MyDrive/chatbot /intents.json').read()
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 model = load_model('chatbotmodel.h5')
-#print(model)
 
 
-#function for cleaning up sentence
+
+#FUNCTION TO CLEAN UP SENTENCE
 
 def clean_up_sentence(sentence):
     sentence_words = nltk.word_tokenize(sentence)
@@ -26,7 +26,7 @@ def clean_up_sentence(sentence):
     return sentence_words
     #print(sentence_words)
 
-# function to check if word is present
+# FUNCTION TO BUILD BAG OF WORDS
 
 def bag_of_words(sentence):
     sentence_words = clean_up_sentence(sentence)
@@ -39,7 +39,7 @@ def bag_of_words(sentence):
                  bag[i] = 1
              return np.array(bag)
 
-# function for providing response in chatbot
+# FUNCTION TO PREDICT CLASS OF SENTENCE
 
 def predict_class(sentence):
 
@@ -58,6 +58,9 @@ def predict_class(sentence):
          return return_list
          #print(return_list)
 
+
+
+#FUNCTION TO GET RESPONSE BY BOT
 def  get_response(intents_list, intents_json):
      tag = intents_list[0]['intent']
      list_of_intents = intents_json['intents']
@@ -67,11 +70,13 @@ def  get_response(intents_list, intents_json):
              break
      return result
 
-print("Go bot is running")
+print("Sial bot is running")
 
 while True:
 
     message = input("")
+    if message == 'exit':
+        sys.exit(0)
     ints =  predict_class(message)
     res = get_response(ints, intents)
     print(res)
