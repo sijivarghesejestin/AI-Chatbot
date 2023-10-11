@@ -93,7 +93,7 @@ for document in documents:
     model.add(Dropout(0.5))                                                       #If a hidden layer has keep_prob = 0.5 , this means that; on each iteration, each unit has 50% probablitity of being included and 50% probability of being dropped out. Dropout is used a lot in computer vision problems because we have a lot of features and not a lot of data
     model.add(Dense(64, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(len(train_y[0]), activation='softmax'))
+    model.add(Dense(len(train_y[0]), activation='softmax'))                       #Softmax is an activation function that scales numbers/logits into probabilities. The output of a Softmax is a vector (say v) with probabilities of each possible outcome. The probabilities in vector v sums to one for all possible outcomes or classes.
 
 
     sgd = SGD(learning_rate= 0.01,weight_decay= 1e-6, momentum=0.9, nesterov=True)
