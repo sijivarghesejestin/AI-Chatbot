@@ -1,1 +1,77 @@
-{"nbformat":4,"nbformat_minor":0,"metadata":{"colab":{"provenance":[],"mount_file_id":"14xcck_eqg867tgB1lkkw6_mLGxWB7w-5","authorship_tag":"ABX9TyNnh7yacZAPNlNJMKkGlSKN"},"kernelspec":{"name":"python3","display_name":"Python 3"},"language_info":{"name":"python"}},"cells":[{"cell_type":"code","execution_count":null,"metadata":{"id":"hPU1otIIqIE4"},"outputs":[],"source":["import random\n","import json\n","import pickle\n","import numpy as np\n","\n","import nltk\n","from nltk.stem import  WordNetLemmatizer\n","\n","\n","from tensorflow.keras.models import load_model\n","\n","lemmatizer = WordNetLemmatizer()\n","intents = json.loads(open('/content/drive/MyDrive/chatbot /intents.json').read())\n","\n","words = pickle.load(open('words.pkl', 'rb'))\n","classes = pickle.load(open('classes.pkl', 'rb'))\n","model = load_model('chatbotmodel.h5')\n","#print(model)\n","\n","\n","#function for cleaning up sentence\n","\n","def clean_up_sentence(sentence):\n","    sentence_words = nltk.word_tokenize(sentence)\n","    sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]\n","    return sentence_words\n","\n","# function to check if word is present\n","\n","def bag_of_words(sentence):\n","    sentence_words = clean_up_sentence(sentence)\n","    words = pickle.load(open('words.pkl', 'rb'))\n","    bag = [0] * len(words)\n","    for w in sentence_words:\n","        for i,words in enumerate(words):\n","            if word == w:\n","                bag[i] = 1\n","            return np.array(bag)\n","\n","# function for providing response in chatbot\n","\n","def predict_class(sentence):\n","\n","    bow = bag_of_words(sentence)\n","    res = model.predict(np.array([bow]))[0]\n","    ERROR_THRESHOLD = 0.5\n","    results = [[i, r] for i,r in enumerate(res) if r > ERROR_THRESHOLD]\n","\n","\n","    results.sort(key=lambda x: x[1], reverse = True)\n","    return_list=[]\n","    for r in results:\n","        return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})\n","        return return_list\n","\n","def  get_response(intents_list, intents_json):\n","    tag = intents_list[0]['intent']\n","    list_of_intents = intents_json['intents']\n","    for i in list_of_intents:\n","        if i['tag'] == tag:\n","            result = random.choice(i['responses'])\n","            break\n","    return result\n","\n","print(\"Go bot is running\")\n","\n","while True:\n","\n","    message = input(\"\")\n","    ints =  predict_class(message)\n","    res = get_response(ints, intents)\n","    print(res)\n","\n","\n","\n","\n"]}]}
+import random
+import json
+import pickle
+import numpy as np
+
+import nltk
+from nltk.stem import  WordNetLemmatizer
+
+
+from tensorflow.keras.models import load_model
+
+lemmatizer = WordNetLemmatizer()
+intents = json.loads(open('/content/drive/MyDrive/chatbot /intents.json').read())
+
+words = pickle.load(open('words.pkl', 'rb'))
+classes = pickle.load(open('classes.pkl', 'rb'))
+model = load_model('chatbotmodel.h5')
+#print(model)
+
+
+#function for cleaning up sentence
+
+def clean_up_sentence(sentence):
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]
+    return sentence_words
+    #print(sentence_words)
+
+# function to check if word is present
+
+def bag_of_words(sentence):
+    sentence_words = clean_up_sentence(sentence)
+    words = pickle.load(open('words.pkl', 'rb'))
+    #print(words)
+    bag = [0] * len(words)
+    for w in sentence_words:
+         for i, word in enumerate(words):
+             if word == w:
+                 bag[i] = 1
+             return np.array(bag)
+
+# function for providing response in chatbot
+
+def predict_class(sentence):
+
+     bow = bag_of_words(sentence)
+     #print(bow)
+     res = model.predict(np.array([bow]))[0]
+     #print(res)
+     ERROR_THRESHOLD = 0.5
+     results = [[i, r] for i,r in enumerate(res) if r > ERROR_THRESHOLD]
+
+
+     results.sort(key = lambda x: x[1], reverse = True)
+     return_list=[]
+     for r in results:
+         return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
+         return return_list
+         #print(return_list)
+
+def  get_response(intents_list, intents_json):
+     tag = intents_list[0]['intent']
+     list_of_intents = intents_json['intents']
+     for i in list_of_intents:
+         if i['tag'] == tag:
+             result = random.choice(i['responses'])
+             break
+     return result
+
+print("Go bot is running")
+
+while True:
+
+    message = input("")
+    ints =  predict_class(message)
+    res = get_response(ints, intents)
+    print(res)
