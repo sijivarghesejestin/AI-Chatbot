@@ -7,7 +7,7 @@ nltk.download('punkt')
 nltk.download('wordnet')
 import tensorflow.keras
 
-                                                                    #for natural language processing
+                                                                                 #for natural language processing
 
 import tensorflow.keras.optimizers
 #import tensorflow as tf
@@ -15,10 +15,10 @@ import tensorflow.keras.optimizers
 #import keras.models
 
 #from keras.models import load_model
-from nltk.stem import WordNetLemmatizer                             # recognise word with same stem(eg:work,worked,working etc)
-from tensorflow.keras.models import Sequential                       #keras sequential which deals with ordering or sequencing of layers within a model.
-from tensorflow.keras.layers import Dense, Activation, Dropout            #A dense layer is a classic fully connected neural network layer : each input node is connected to each output node. A dropout layer is similar except that when the layer is used, the activations are set to zero for some random nodes. This is a way to prevent overfitting.
-from tensorflow.keras.optimizers import SGD     #Stochastic Gradient Descent (SGD) is a variant of the Gradient Descent algorithm that is used for optimizing machine learning models.
+from nltk.stem import WordNetLemmatizer                                          # recognise word with same stem(eg:work,worked,working etc)
+from tensorflow.keras.models import Sequential                                   #keras sequential which deals with ordering or sequencing of layers within a model.
+from tensorflow.keras.layers import Dense, Activation, Dropout                   #A dense layer is a classic fully connected neural network layer : each input node is connected to each output node. A dropout layer is similar except that when the layer is used, the activations are set to zero for some random nodes. This is a way to prevent overfitting.
+from tensorflow.keras.optimizers import SGD                                      #Stochastic Gradient Descent (SGD) is a variant of the Gradient Descent algorithm that is used for optimizing machine learning models.
 
 
 lemmatizer = WordNetLemmatizer()
@@ -35,21 +35,21 @@ for intent in intents['intents']:
    for pattern in intent['patterns']:
        word_list = nltk.word_tokenize(pattern)                                      #splits a sentence into words
       # print(word_list)
-       words.extend(word_list)                                                         #append new words to existing list
-       documents.append((word_list, intent['tag']))                               #determines which word belong to which tag class
+       words.extend(word_list)                                                      #append new words to existing list
+       documents.append((word_list, intent['tag']))                                 #determines which word belong to which tag class
        #print(documents)
        if intent['tag'] not in classes:
-           classes.append(intent['tag'])                                           # if words are not there in tag append to tag
+           classes.append(intent['tag'])                                            # if words are not there in tag append to tag
 
 words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]
-words = sorted(set(words))                                                              #to remove duplicate word use 'set'
-#print(words)
+words = sorted(set(words))                                                          #to remove duplicate word use 'set'
+
 classes = sorted(set(classes))
-#print(classes)
+
 # process to converts any kind of python objects (list, dict, etc.) into byte streams (0s and 1s) is called pickling or serialization or flattening or marshalling
 #dump function takes 3 arguments. The first argument is the object that you want to store. The second argument is the file object you get by opening the desired file in write-binary (wb) mode. And the third argument is the key-value argument
 
-pickle.dump(words, open('words.pkl', 'wb'))                                                 #dump() writes the data to a file
+pickle.dump(words, open('words.pkl', 'wb'))                                         #dump() writes the data to a file
 pickle.dump(classes, open('classes.pkl', 'wb'))
 
 #neural network dont needs word it need numbers so we have to convert these chars/words to numbers so that it can work on
@@ -61,7 +61,7 @@ output_empty = [0] * len(classes)
 #print(output_empty)
 
 for document in documents:
-    bag = []                                               # for each combination we will create a empty bag of words
+    bag = []                                                                        # for each combination we will create a empty bag of words
     word_patterns = document[0]
 
     word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns]
@@ -70,15 +70,15 @@ for document in documents:
        bag.append(1) if word in word_patterns else bag.append(0)
 
 
-    output_row = list(output_empty)                         #copy it to a list
-    output_row[classes.index(document[1])] = 1              #set index to the output_row to 1
+    output_row = list(output_empty)                                                #copy it to a list
+    output_row[classes.index(document[1])] = 1                                     #set index to the output_row to 1
     training.append([bag, output_row])
     print(training)
 
 
 
 
-    random.shuffle(training)                                #shuffle the training data
+    random.shuffle(training)                                                      #shuffle the training data
     #replace training instead of data
     training = np.array(training,dtype="object")
 
