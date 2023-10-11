@@ -88,9 +88,9 @@ for document in documents:
 
     # code to build neural network
 
-    model = Sequential()
-    model.add(Dense(128, input_shape=(len(train_x[0]),), activation='relu'))
-    model.add(Dropout(0.5))
+    model = Sequential()                                                          #Sequential API is used to create models layer-by-layer.
+    model.add(Dense(128, input_shape=(len(train_x[0]),), activation='relu'))      #It defines the shape will have len(train_x[0]) input with 128 neurons in first hidden layers,The Rectified Linear Unit is the most commonly used activation function in deep learning models. The function returns 0 if it receives any negative input, but for any positive value x it returns that value back
+    model.add(Dropout(0.5))                                                       #If a hidden layer has keep_prob = 0.5 , this means that; on each iteration, each unit has 50% probablitity of being included and 50% probability of being dropped out. Dropout is used a lot in computer vision problems because we have a lot of features and not a lot of data
     model.add(Dense(64, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(len(train_y[0]), activation='softmax'))
