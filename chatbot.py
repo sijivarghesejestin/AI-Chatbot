@@ -2,7 +2,7 @@ import random
 import json
 import pickle
 import numpy as np
-
+import sys
 import nltk
 from nltk.stem import  WordNetLemmatizer
 
@@ -76,7 +76,7 @@ while True:
 
     message = input("")
     if message == 'exit':
-        sys.exit(0)
+        sys.exit
     ints =  predict_class(message)
     res = get_response(ints, intents)
     print(res)
