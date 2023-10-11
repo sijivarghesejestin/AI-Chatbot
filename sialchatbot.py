@@ -79,7 +79,7 @@ for document in documents:
 
 
     random.shuffle(training)                                                      #shuffle the training data
-    #replace training instead of data
+    
     training = np.array(training,dtype="object")
 
 
